@@ -12,6 +12,7 @@ type Struct struct {
 	Field    string
 	FieldAge int
 	MyAddr   string `json:"Addr"`
+	HTTPAddr string
 }
 
 func Test_Decapitalize(t *testing.T) {
@@ -23,7 +24,6 @@ func Test_Decapitalize(t *testing.T) {
 	jsoniter.Unmarshal(bs, &s1)
 	require.Equal(t, s1.Field, s.Field)
 	require.Equal(t, s1.MyAddr, s.MyAddr)
-	fmt.Println(string(bs))
 }
 
 func Test_Snake(t *testing.T) {
@@ -35,4 +35,23 @@ func Test_Snake(t *testing.T) {
 	json.Unmarshal(bs, &s1)
 	require.Equal(t, s1.Field, s.Field)
 	require.Equal(t, s1.MyAddr, s.MyAddr)
+	fmt.Println(string(bs))
 }
+
+// func Test_s(t *testing.T) {
+// 	fmt.Println(snake("CamelCase"))
+// 	fmt.Println(snake("camelCamelCase"))
+// 	fmt.Println(snake("CCamelCCamelCase"))
+// 	fmt.Println(snake("CamelCamelCase"))
+// 	fmt.Println(snake("A"))
+// 	fmt.Println(snake("a"))
+// 	fmt.Println(snake("HTTPId"))
+// 	fmt.Println(snake("HTTP2Id"))
+// 	// snake("camelCamelCase")
+// 	// snake("CCamelCCamelCase")
+// 	// snake("CamelCamelCase")
+// 	// snake("aB")
+// 	// snake("A")
+// 	// snake("a")
+// 	// snake("HTTPId")
+// }

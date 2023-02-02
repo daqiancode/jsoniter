@@ -1,7 +1,6 @@
 package jsoniter
 
 import (
-	"bytes"
 	"fmt"
 	"reflect"
 	"sort"
@@ -421,21 +420,67 @@ func decapitalize(str string) string {
 	}
 	return string(bs)
 }
-func snakeCase(camel string) string {
-	var buf bytes.Buffer
-	for _, c := range []byte(camel) {
-		if 'A' <= c && c <= 'Z' {
-			// just convert [A-Z] to _[a-z]
-			if buf.Len() > 0 {
-				buf.WriteByte('_')
-			}
-			buf.WriteByte(c + 32)
-		} else {
-			buf.WriteByte(c)
+
+func isUpper(b byte) bool {
+	return b >= 'A' && b <= 'Z'
+}
+func isLower(b byte) bool {
+	return b >= 'a' && b <= 'z'
+}
+
+func snakeCase(s string) string {
+	pos := make([]bool, len(s))
+	c := 0
+	for i := 1; i < len(s); i++ {
+		if isLower(s[i-1]) && isUpper(s[i]) {
+			c++
+			pos[i] = true
+		}
+		if i > 1 && isUpper(s[i-2]) && isUpper(s[i-1]) && isLower(s[i]) {
+			c++
+			pos[i-1] = true
 		}
 	}
-	return buf.String()
+	r := make([]byte, c+len(s))
+	j := 0
+	for i := 0; i < len(s); i++ {
+		if pos[i] {
+			r[j] = '_'
+			j++
+			if isUpper(s[i]) {
+				r[j] = s[i] + 32
+			} else {
+				r[j] = s[i]
+			}
+
+		} else {
+			if isUpper(s[i]) {
+				r[j] = s[i] + 32
+			} else {
+				r[j] = s[i]
+			}
+		}
+		j++
+	}
+
+	return string(r)
 }
+
+//	func snakeCase(camel string) string {
+//		var buf bytes.Buffer
+//		for _, c := range []byte(camel) {
+//			if 'A' <= c && c <= 'Z' {
+//				// just convert [A-Z] to _[a-z]
+//				if buf.Len() > 0 {
+//					buf.WriteByte('_')
+//				}
+//				buf.WriteByte(c + 32)
+//			} else {
+//				buf.WriteByte(c)
+//			}
+//		}
+//		return buf.String()
+//	}
 func createStructDescriptor(ctx *ctx, typ reflect2.Type, bindings []*Binding, embeddedBindings []*Binding) *StructDescriptor {
 	structDescriptor := &StructDescriptor{
 		Type:   typ,
