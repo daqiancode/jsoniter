@@ -3,9 +3,10 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/json-iterator/go"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/daqiancode/jsoniter"
+	"github.com/stretchr/testify/require"
 )
 
 // Standard Encoder has trailing newline.

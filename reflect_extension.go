@@ -1,13 +1,15 @@
 package jsoniter
 
 import (
+	"bytes"
 	"fmt"
-	"github.com/modern-go/reflect2"
 	"reflect"
 	"sort"
 	"strings"
 	"unicode"
 	"unsafe"
+
+	"github.com/modern-go/reflect2"
 )
 
 var typeDecoders = map[string]ValDecoder{}
@@ -383,17 +385,56 @@ func describeStruct(ctx *ctx, typ reflect2.Type) *StructDescriptor {
 		if encoder == nil {
 			encoder = encoderOfType(ctx.append(field.Name()), field.Type())
 		}
+		toNames := fieldNames
+		if tag == "" {
+
+			if ctx.decapitalize {
+				toNames = make([]string, len(fieldNames))
+				for i, v := range fieldNames {
+					toNames[i] = decapitalize(v)
+				}
+			}
+			if ctx.snakeCase {
+				for i, v := range fieldNames {
+					toNames[i] = snakeCase(v)
+				}
+			}
+		}
 		binding := &Binding{
 			Field:     field,
 			FromNames: fieldNames,
-			ToNames:   fieldNames,
-			Decoder:   decoder,
-			Encoder:   encoder,
+			// ToNames:   fieldNames,
+			ToNames: toNames,
+			Decoder: decoder,
+			Encoder: encoder,
 		}
 		binding.levels = []int{i}
 		bindings = append(bindings, binding)
 	}
 	return createStructDescriptor(ctx, typ, bindings, embeddedBindings)
+}
+
+func decapitalize(str string) string {
+	bs := []byte(str)
+	if bs[0] >= 'A' && bs[0] <= 'Z' {
+		bs[0] += 32
+	}
+	return string(bs)
+}
+func snakeCase(camel string) string {
+	var buf bytes.Buffer
+	for _, c := range []byte(camel) {
+		if 'A' <= c && c <= 'Z' {
+			// just convert [A-Z] to _[a-z]
+			if buf.Len() > 0 {
+				buf.WriteByte('_')
+			}
+			buf.WriteByte(c + 32)
+		} else {
+			buf.WriteByte(c)
+		}
+	}
+	return buf.String()
 }
 func createStructDescriptor(ctx *ctx, typ reflect2.Type, bindings []*Binding, embeddedBindings []*Binding) *StructDescriptor {
 	structDescriptor := &StructDescriptor{

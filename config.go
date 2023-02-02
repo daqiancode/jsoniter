@@ -25,6 +25,8 @@ type Config struct {
 	ValidateJsonRawMessage        bool
 	ObjectFieldMustBeSimpleString bool
 	CaseSensitive                 bool
+	Decapitalize                  bool
+	SnakeCase                     bool
 }
 
 // API the public interface of this package.
@@ -65,6 +67,31 @@ var ConfigFastest = Config{
 	ObjectFieldMustBeSimpleString: true, // do not unescape object field
 }.Froze()
 
+// Decapitalized
+var ConfigDefaultDecapitalized = Config{
+	EscapeHTML:   true,
+	Decapitalize: true,
+}.Froze()
+var Decapitalized = Config{
+	EscapeHTML:             true,
+	SortMapKeys:            true,
+	ValidateJsonRawMessage: true,
+	Decapitalize:           true,
+}.Froze()
+var SnakeCase = Config{
+	EscapeHTML:             true,
+	SortMapKeys:            true,
+	ValidateJsonRawMessage: true,
+	Decapitalize:           true,
+	SnakeCase:              true,
+}.Froze()
+var ConfigFastestDecapitalized = Config{
+	EscapeHTML:                    false,
+	MarshalFloatWith6Digits:       true, // will lose precession
+	ObjectFieldMustBeSimpleString: true, // do not unescape object field
+	Decapitalize:                  true,
+}.Froze()
+
 type frozenConfig struct {
 	configBeforeFrozen            Config
 	sortMapKeys                   bool
@@ -80,6 +107,8 @@ type frozenConfig struct {
 	streamPool                    *sync.Pool
 	iteratorPool                  *sync.Pool
 	caseSensitive                 bool
+	decapitalize                  bool
+	snakeCase                     bool
 }
 
 func (cfg *frozenConfig) initCache() {
@@ -134,6 +163,8 @@ func (cfg Config) Froze() API {
 		onlyTaggedField:               cfg.OnlyTaggedField,
 		disallowUnknownFields:         cfg.DisallowUnknownFields,
 		caseSensitive:                 cfg.CaseSensitive,
+		decapitalize:                  cfg.Decapitalize,
+		snakeCase:                     cfg.SnakeCase,
 	}
 	api.streamPool = &sync.Pool{
 		New: func() interface{} {
