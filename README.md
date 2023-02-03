@@ -11,7 +11,7 @@ Auto decapitalize & snakecase json tools with high-performance 100% compatible d
 1. Decapitalize for each field of struct. 
 2. Snakecase for each field of struct. 
 
-## Added new features: Decapitalize & Snakecase
+## New features: Decapitalize & Snakecase
 ```go
 type Struct struct {
 	Field    string
