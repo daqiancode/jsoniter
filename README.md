@@ -18,6 +18,7 @@ type Struct struct {
 	FieldAge int
 	MyAddr   string `json:"Addr"`
 	IPAddr   string 
+    ABC string
 }
 func Test_Capitalize(t *testing.T) {
 	s := Struct{Field: "field", FieldAge: 10, MyAddr: "earth"}
@@ -30,7 +31,7 @@ func Test_Capitalize(t *testing.T) {
 	require.Equal(t, s1.Field, s.Field)
 	require.Equal(t, s1.MyAddr, s.MyAddr)
 	fmt.Println(string(bs))
-    //output: {"field":"field","fieldAge":10,"Addr":"earth" , "ipAddr":""}
+    //output: {"field":"field","fieldAge":10,"Addr":"earth" , "ipAddr":"", "abc":""}
 }
 func Test_Snake(t *testing.T) {
 	s := Struct{Field: "field", FieldAge: 10, MyAddr: "earth"}
@@ -43,7 +44,7 @@ func Test_Snake(t *testing.T) {
 	require.Equal(t, s1.Field, s.Field)
 	require.Equal(t, s1.MyAddr, s.MyAddr)
 	fmt.Println(string(bs))
-    //output: {"field":"field","field_age":10,"Addr":"earth"}
+    //output: {"field":"field","field_age":10,"Addr":"earth", "ip_addr":"", "abc":""}
 }
 ```
 
