@@ -1,6 +1,7 @@
 package misc_tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/daqiancode/jsoniter"
@@ -11,7 +12,10 @@ type Struct struct {
 	Field    string
 	FieldAge int
 	MyAddr   string `json:"Addr"`
-	HTTPAddr string
+	IPAddr   string
+	ABC      string
+	ABCd     string
+	A        string
 }
 
 func Test_Decapitalize(t *testing.T) {
@@ -23,6 +27,7 @@ func Test_Decapitalize(t *testing.T) {
 	jsoniter.Unmarshal(bs, &s1)
 	require.Equal(t, s1.Field, s.Field)
 	require.Equal(t, s1.MyAddr, s.MyAddr)
+	fmt.Println(string(bs))
 }
 
 func Test_Snake(t *testing.T) {
@@ -34,4 +39,5 @@ func Test_Snake(t *testing.T) {
 	json.Unmarshal(bs, &s1)
 	require.Equal(t, s1.Field, s.Field)
 	require.Equal(t, s1.MyAddr, s.MyAddr)
+	fmt.Println(string(bs))
 }

@@ -413,11 +413,25 @@ func describeStruct(ctx *ctx, typ reflect2.Type) *StructDescriptor {
 	return createStructDescriptor(ctx, typ, bindings, embeddedBindings)
 }
 
-func decapitalize(str string) string {
-	bs := []byte(str)
-	if bs[0] >= 'A' && bs[0] <= 'Z' {
-		bs[0] += 32
+func decapitalize(s string) string {
+	bs := []byte(s)
+	// if bs[0] >= 'A' && bs[0] <= 'Z' {
+	// 	bs[0] += 32
+	// }
+	i := 0
+	for ; i < len(s); i++ {
+		if !isUpper(s[i]) {
+			break
+		}
 	}
+	fmt.Println("i:", i)
+	if i != len(s) {
+		i--
+	}
+	for j := 0; j < i; j++ {
+		bs[j] += 32
+	}
+
 	return string(bs)
 }
 

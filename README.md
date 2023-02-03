@@ -7,6 +7,45 @@
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/json-iterator/Lobby)
 
 A high-performance 100% compatible drop-in replacement of "encoding/json"
+## New features:
+1. Decapitalize for each field of struct. 
+2. Snakecase for each field of struct. 
+
+## Added new features: Decapitalize & Snakecase
+```go
+type Struct struct {
+	Field    string
+	FieldAge int
+	MyAddr   string `json:"Addr"`
+	IPAddr   string 
+}
+func Test_Capitalize(t *testing.T) {
+	s := Struct{Field: "field", FieldAge: 10, MyAddr: "earth"}
+	json := jsoniter.Decapitalized
+	bs, err := json.Marshal(s)
+	require.Nil(t, err)
+    fmt.Println(bs ,err)
+	var s1 Struct
+	jsoniter.Unmarshal(bs, &s1)
+	require.Equal(t, s1.Field, s.Field)
+	require.Equal(t, s1.MyAddr, s.MyAddr)
+	fmt.Println(string(bs))
+    //output: {"field":"field","fieldAge":10,"Addr":"earth" , "ipAddr":""}
+}
+func Test_Snake(t *testing.T) {
+	s := Struct{Field: "field", FieldAge: 10, MyAddr: "earth"}
+	json := jsoniter.SnakeCase
+	bs, err := json.Marshal(s)
+	require.Nil(t, err)
+	require.Equal(t, true, true)
+	var s1 Struct
+	json.Unmarshal(bs, &s1)
+	require.Equal(t, s1.Field, s.Field)
+	require.Equal(t, s1.MyAddr, s.MyAddr)
+	fmt.Println(string(bs))
+    //output: {"field":"field","field_age":10,"Addr":"earth"}
+}
+```
 
 # Benchmark
 
@@ -64,40 +103,6 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 json.Unmarshal(input, &data)
 ```
 
-## Added new features: Decapitalize & Snakecase
-```go
-type Struct struct {
-	Field    string
-	FieldAge int
-	MyAddr   string `json:"Addr"`
-}
-func Test_Capitalize(t *testing.T) {
-	s := Struct{Field: "field", FieldAge: 10, MyAddr: "earth"}
-	json := jsoniter.Decapitalized
-	bs, err := json.Marshal(s)
-	require.Nil(t, err)
-    fmt.Println(bs ,err)
-	var s1 Struct
-	jsoniter.Unmarshal(bs, &s1)
-	require.Equal(t, s1.Field, s.Field)
-	require.Equal(t, s1.MyAddr, s.MyAddr)
-	fmt.Println(string(bs))
-    //output: {"field":"field","fieldAge":10,"Addr":"earth"}
-}
-func Test_Snake(t *testing.T) {
-	s := Struct{Field: "field", FieldAge: 10, MyAddr: "earth"}
-	json := jsoniter.SnakeCase
-	bs, err := json.Marshal(s)
-	require.Nil(t, err)
-	require.Equal(t, true, true)
-	var s1 Struct
-	json.Unmarshal(bs, &s1)
-	require.Equal(t, s1.Field, s.Field)
-	require.Equal(t, s1.MyAddr, s.MyAddr)
-	fmt.Println(string(bs))
-    //output: {"field":"field","field_age":10,"Addr":"earth"}
-}
-```
 
 [More documentation](http://jsoniter.com/migrate-from-go-std.html)
 
