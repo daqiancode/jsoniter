@@ -424,7 +424,6 @@ func decapitalize(s string) string {
 			break
 		}
 	}
-	fmt.Println("i:", i)
 	if i != len(s) {
 		i--
 	}

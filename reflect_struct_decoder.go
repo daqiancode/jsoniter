@@ -40,6 +40,14 @@ func decoderOfStruct(ctx *ctx, typ reflect2.Type) ValDecoder {
 			}
 		}
 	}
+	if ctx.snakeCase {
+		for k, binding := range bindings {
+			sk := snakeCase(k)
+			if _, found := fields[sk]; !found {
+				fields[sk] = binding.Decoder.(*structFieldDecoder)
+			}
+		}
+	}
 
 	return createStructDecoder(ctx, typ, fields)
 }
