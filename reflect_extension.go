@@ -415,22 +415,15 @@ func describeStruct(ctx *ctx, typ reflect2.Type) *StructDescriptor {
 
 func decapitalize(s string) string {
 	bs := []byte(s)
-	// if bs[0] >= 'A' && bs[0] <= 'Z' {
-	// 	bs[0] += 32
-	// }
 	i := 0
 	for ; i < len(s); i++ {
 		if !isUpper(s[i]) {
 			break
 		}
 	}
-	if i != len(s) {
-		i--
-	}
 	for j := 0; j < i; j++ {
 		bs[j] += 32
 	}
-
 	return string(bs)
 }
 
